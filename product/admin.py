@@ -12,4 +12,3 @@ class ProdutoAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(models.Produto, ProdutoAdmin)
-admin.site.register(Produto)
