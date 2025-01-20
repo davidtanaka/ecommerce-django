@@ -22,9 +22,11 @@ class Produto(models.Model):
 
     def get_preco_formatado(self):
         return f'R$ {self.preco_marketing}'.replace('.', ',')
+    get_preco_formatado.short_description = 'Preço'
 
     def get_preco_promocional_formatado(self):
         return f'R$ {self.preco_marketing_promocional}'.replace('.', ',')
+    get_preco_promocional_formatado.short_description = 'Preço promocinal'
 
     @staticmethod
     def resize_image(img, new_width=800):
