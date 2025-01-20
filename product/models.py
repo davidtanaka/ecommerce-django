@@ -1,5 +1,5 @@
-from pickletools import optimize
 from django.db import models
+from django.utils.text import slugify
 from django.conf import settings
 from PIL.Image import Resampling
 from PIL import Image
@@ -12,13 +12,19 @@ class Produto(models.Model):
     imagem = models.ImageField(
         upload_to='produto_imagens/Y/%m', blank=True, null=True)
     slug= models.SlugField(unique=True)
-    preco_marketing = models.FloatField()
-    preco_marketing_promocional = models.FloatField(default=0)
+    preco_marketing = models.FloatField(verbose_name='Preço')
+    preco_marketing_promocional = models.FloatField(default=0, verbose_name='Preço Promocional.')
     tipo = models.CharField(
         default='V',
         max_length=1,
         choices=(('V', 'Variacao'), ('S', 'Simples'))
     )
+
+    def get_preco_formatado(self):
+        return f'R$ {self.preco_marketing}'.replace('.', ',')
+
+    def get_preco_promocional_formatado(self):
+        return f'R$ {self.preco_marketing_promocional}'.replace('.', ',')
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -41,6 +47,9 @@ class Produto(models.Model):
         )
 
     def save(self, *args, **kwargs):
+        slug = f'{slugify(self.nome)}'
+        self.slug = slug
+
         super().save(*args, **kwargs)
 
         max_image_size = 800
